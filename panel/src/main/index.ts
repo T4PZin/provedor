@@ -52,7 +52,6 @@ function registerHandlers(): void {
   ipcMain.handle('get-known-players', () => store.getKnownPlayers())
   ipcMain.handle('get-app-version', () => app.getVersion())
   ipcMain.handle('load-catalog', (_e, serverPath?: string): PaintEntry[] => {
-    const rel = ['plugins', 'InventoryChanger', 'data', 'skins.json']
     const roots: string[] = []
     roots.push(join(app.getAppPath(), 'build', 'catalog'))
     roots.push(join(app.getAppPath(), 'server'))
@@ -61,8 +60,14 @@ function registerHandlers(): void {
     const settings = store.loadSettings()
     if (settings.serverPath) roots.push(settings.serverPath)
     if (serverPath) roots.push(serverPath)
+
+    const candidates: string[] = []
     for (const r of roots) {
-      const file = join(r, ...rel)
+      if (!r) continue
+      candidates.push(join(r, 'skins.json'))
+      candidates.push(join(r, 'plugins', 'InventoryChanger', 'data', 'skins.json'))
+    }
+    for (const file of candidates) {
       if (existsSync(file)) {
         return JSON.parse(readFileSync(file, 'utf8')) as PaintEntry[]
       }
