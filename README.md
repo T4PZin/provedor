@@ -85,3 +85,16 @@ npm run update-catalog
 O projeto publica releases em `github.com/T4PZin/provedor`. O `electron-builder.yml`
 usa `publish: [{ provider: github }]`, então basta definir `GH_TOKEN` e rodar
 `npm run release`.
+
+### Assinatura de código (opcional, recomendada)
+
+Sem certificado o instalador não é assinado e o Windows exibe o aviso do SmartScreen. Para assinar:
+
+- **Modo simples:** defina as variáveis de ambiente `CSC_LINK` (caminho ou URL do `.pfx`) e
+  `CSC_KEY_PASSWORD` antes do build. O `electron-builder` assina sozinho.
+- **Azure Trusted Signing** (gratuito para open source): instale
+  `electron-builder-azure-sign-tool`, configure as credenciais do cofre de chaves no
+  bloco `win.azureSignTool` do `electron-builder.yml` e defina as respectivas secrets.
+
+Em ambos os casos, para assinar também na CI, adicione `CSC_LINK`, `CSC_KEY_PASSWORD`
+(ou as secrets do Azure) como *secrets* do repositório e referencie-as no workflow.

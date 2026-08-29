@@ -10,9 +10,26 @@ files:
   - README.md
 publish:
   - provider: github
+# Code signing (opcional):
+# - Modo simples: defina as variaveis de ambiente CSC_LINK (caminho/URL do .pfx)
+#   e CSC_KEY_PASSWORD. O electron-builder assina automaticamente.
+# - Azure Trusted Signing (gratuito p/ OSS): instale o plugin
+#   `electron-builder-azure-sign-tool`, defina as secrets abaixo e descomente
+#   o bloco azureSignTool em `win` (precisa de um certificado da Azure).
+# Sem certificado definido, o build ignora a assinatura (comportamento atual).
 win:
   target:
     - nsis
+  signingHashAlgorithms:
+    - sha256
+  # azureSignTool:
+  #   azureKeyVaultUrl: "https://<seu-cofre>.vault.azure.net"
+  #   azureClientId: "<client-id>"
+  #   azureTenantId: "<tenant-id>"
+  #   azureClientSecret: "<client-secret>"
+  #   azureCertificateName: "<nome-do-certificado>"
+  #   fileDigest: "sha256"
+  #   timestampServer: "http://timestamp.acs.microsoft.com"
 nsis:
   artifactName: FRAGHOST-Setup-${version}.${ext}
   shortcutName: FRAGHOST
