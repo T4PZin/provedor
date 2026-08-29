@@ -1,6 +1,6 @@
 import { app, BrowserWindow, ipcMain } from 'electron'
 import { join } from 'path'
-import { readFileSync } from 'fs'
+import { existsSync, readFileSync } from 'fs'
 import { ServerManager } from './serverManager'
 import * as store from './store'
 import { setupUpdater } from './updater'
@@ -52,9 +52,21 @@ function registerHandlers(): void {
   ipcMain.handle('get-known-players', () => store.getKnownPlayers())
   ipcMain.handle('get-app-version', () => app.getVersion())
   ipcMain.handle('load-catalog', (_e, serverPath?: string): PaintEntry[] => {
-    const root = serverPath ?? store.loadSettings().serverPath
-    const file = join(root, 'plugins', 'InventoryChanger', 'data', 'skins.json')
-    return JSON.parse(readFileSync(file, 'utf8')) as PaintEntry[]
+    const rel = ['plugins', 'InventoryChanger', 'data', 'skins.json']
+    const roots: string[] = []
+    roots.push(join(app.getAppPath(), 'server'))
+    roots.push(join(app.getAppPath(), '..', 'server'))
+    if (process.resourcesPath) roots.push(join(process.resourcesPath, 'server'))
+    const settings = store.loadSettings()
+    if (settings.serverPath) roots.push(settings.serverPath)
+    if (serverPath) roots.push(serverPath)
+    for (const r of roots) {
+      const file = join(r, ...rel)
+      if (existsSync(file)) {
+        return JSON.parse(readFileSync(file, 'utf8')) as PaintEntry[]
+      }
+    }
+    throw new Error('Catalogo de skins nao encontrado (server/plugins/InventoryChanger/data/skins.json)')
   })
 }
 

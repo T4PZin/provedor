@@ -18,7 +18,7 @@ export interface KnownPlayer {
   lastSeen: string
 }
 
-export type PaintCategory = 'knife' | 'glove' | 'weapon'
+export type PaintCategory = 'knife' | 'glove' | 'weapon' | 'agent'
 
 export interface PaintEntry {
   id: string

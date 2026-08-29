@@ -35,6 +35,7 @@ export default function InventoryPage() {
   const [items, setItems] = useState<PaintEntry[]>([])
   const [known, setKnown] = useState<KnownPlayer[]>([])
   const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     Promise.all([api.loadCatalog(), api.getKnownPlayers()])
@@ -42,12 +43,19 @@ export default function InventoryPage() {
         setItems(catalog)
         setKnown(players)
       })
+      .catch((e: unknown) => setError(e instanceof Error ? e.message : String(e)))
       .finally(() => setLoading(false))
   }, [])
 
   return (
     <>
       <h3 style={{ marginTop: 0 }}>{t('inventory.title')}</h3>
+
+      {error && (
+        <div className="card" style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}>
+          <strong>{t('dashboard.error')}:</strong> {error}
+        </div>
+      )}
 
       <div className="card">
         <strong>{t('inventory.known')}</strong>
