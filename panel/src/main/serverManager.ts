@@ -95,6 +95,7 @@ export class ServerManager extends EventEmitter {
     const lines = text.split(/\r?\n/)
     for (const line of lines) {
       if (!line.trim()) continue
+      if (line.includes('CTextConsoleWin::GetLine')) continue
       this.emit('log', line)
       const ev = parseLogLine(line)
       switch (ev.type) {
