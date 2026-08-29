@@ -6,7 +6,7 @@ directories:
   buildResources: build
 files:
   - out/**/*
-  - server/**/*
+  - build/catalog/**/*
   - README.md
 publish:
   - provider: github

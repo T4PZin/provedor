@@ -77,6 +77,12 @@ function build() {
   fs.mkdirSync(path.dirname(outFile), { recursive: true })
   fs.writeFileSync(outFile, JSON.stringify(out, null, 2), 'utf8')
   console.log(`gerado: ${path.relative(root, outFile)} (${out.length} itens)`)
+
+  // copia tambem para o build do painel (e' empacotado no app)
+  const panelCopy = path.join(root, 'panel', 'build', 'catalog', 'skins.json')
+  fs.mkdirSync(path.dirname(panelCopy), { recursive: true })
+  fs.writeFileSync(panelCopy, JSON.stringify(out, null, 2), 'utf8')
+  console.log(`gerado: ${path.relative(root, panelCopy)} (${out.length} itens)`)
 }
 
 build()

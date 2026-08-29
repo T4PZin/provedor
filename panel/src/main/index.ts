@@ -54,6 +54,7 @@ function registerHandlers(): void {
   ipcMain.handle('load-catalog', (_e, serverPath?: string): PaintEntry[] => {
     const rel = ['plugins', 'InventoryChanger', 'data', 'skins.json']
     const roots: string[] = []
+    roots.push(join(app.getAppPath(), 'build', 'catalog'))
     roots.push(join(app.getAppPath(), 'server'))
     roots.push(join(app.getAppPath(), '..', 'server'))
     if (process.resourcesPath) roots.push(join(process.resourcesPath, 'server'))
@@ -66,7 +67,7 @@ function registerHandlers(): void {
         return JSON.parse(readFileSync(file, 'utf8')) as PaintEntry[]
       }
     }
-    throw new Error('Catalogo de skins nao encontrado (server/plugins/InventoryChanger/data/skins.json)')
+    throw new Error('Catalogo de skins nao encontrado (build/catalog/skins.json)')
   })
 }
 
