@@ -1,0 +1,29 @@
+{
+  "players": [
+    {
+      "steamId": "76561198000000000",
+      "name": "Jogador Exemplo (edite ou apague)",
+      "agent": "ct_sas",
+      "knife": {
+        "id": "weapon_knife_karambit",
+        "defIndex": 507,
+        "paintKit": 38,
+        "wear": 0.01,
+        "seed": 0,
+        "statTrak": true,
+        "statTrakKills": 1337,
+        "nameTag": "Faca do Patrao"
+      },
+      "gloves": {
+        "defIndex": 5030,
+        "paintKit": 10037,
+        "wear": 0.12,
+        "seed": 0
+      },
+      "weapons": {
+        "weapon_ak47": { "paintKit": 302, "wear": 0.03, "seed": 0, "statTrak": true, "statTrakKills": 5000, "nameTag": "" },
+        "weapon_awp": { "paintKit": 344, "wear": 0.01, "seed": 0, "statTrak": false, "statTrakKills": 0, "nameTag": "Dragon Lore do BR" }
+      }
+    }
+  ]
+}

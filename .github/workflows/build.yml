@@ -1,0 +1,52 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  plugin:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET 10 SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Restore plugin
+        run: dotnet restore server/plugins/InventoryChanger/InventoryChanger.csproj
+      - name: Build plugin
+        run: dotnet build server/plugins/InventoryChanger/InventoryChanger.csproj -c Release --no-restore
+      - name: Test plugin
+        run: dotnet test server/plugins/InventoryChanger.Tests/InventoryChanger.Tests.csproj -c Release
+
+  panel:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: pwsh
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Install panel deps
+        working-directory: panel
+        run: npm install
+      - name: Typecheck and unit tests
+        working-directory: panel
+        run: npm run typecheck
+      - name: Build panel
+        working-directory: panel
+        run: npm run build
+      - name: Generate catalog
+        working-directory: panel
+        run: npm run update-catalog
+      - name: Catalog tests
+        working-directory: tools
+        run: node --test

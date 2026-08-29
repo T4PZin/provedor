@@ -1,0 +1,23 @@
+# Node
+panel/node_modules/
+panel/dist/
+panel/out/
+*.log
+
+# .NET
+server/plugins/**/bin/
+server/plugins/**/obj/
+*.user
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+*.gslt
+.env
+
+# CS2 server runtime (baixado via steamcmd)
+server/cs2-dedicated/
+server/steamcmd/
+server/install/

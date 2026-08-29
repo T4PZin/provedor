@@ -1,0 +1,17 @@
+appId: com.fraghost.app
+productName: FRAGHOST
+directories:
+  output: dist
+  buildResources: build
+files:
+  - out/**/*
+  - server/**/*
+  - README.md
+publish:
+  - provider: github
+win:
+  target:
+    - nsis
+nsis:
+  artifactName: FRAGHOST-Setup-${version}.${ext}
+  shortcutName: FRAGHOST
