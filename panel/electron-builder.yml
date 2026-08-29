@@ -1,5 +1,6 @@
 appId: com.fraghost.app
 productName: FRAGHOST
+icon: build/icon.ico
 directories:
   output: dist
   buildResources: build
