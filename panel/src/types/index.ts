@@ -1,5 +1,6 @@
 export interface Settings {
   serverPath: string
+  serverExe?: string
   port: number
   gslt: string
   rconPassword?: string
@@ -47,4 +48,5 @@ export interface FraghostAPI {
   getAppVersion(): Promise<string>
   onServerLog(cb: (line: string) => void): () => void
   onServerStatus(cb: (status: ServerStatus) => void): () => void
+  onServerError(cb: (msg: string) => void): () => void
 }

@@ -1,11 +1,13 @@
 import { ChildProcessWithoutNullStreams, spawn } from 'child_process'
 import { EventEmitter } from 'events'
-import { join } from 'path'
+import { existsSync } from 'fs'
+import { dirname, join } from 'path'
 import { parseLogLine } from './serverManager.parse'
 import type { Player, ServerStatus } from '../types'
 
 export interface StartOptions {
   serverPath: string
+  serverExe?: string
   port: number
   gslt: string
 }
@@ -22,14 +24,30 @@ export class ServerManager extends EventEmitter {
 
   start(opts: StartOptions): void {
     if (this.proc) return
-    const exe = join(opts.serverPath, 'cs2.exe')
-    this.proc = spawn(exe, ['-dedicated', `-port`, String(opts.port), `+sv_setsteamaccount`, opts.gslt], {
-      cwd: opts.serverPath
+    const exe = this.resolveExe(opts)
+    if (!exe) {
+      this.emit(
+        'error',
+        `Executavel do servidor nao encontrado em "${opts.serverPath}". ` +
+          `Verifique o caminho nas Configuracoes e se o servidor dedicado esta instalado/extraido.`
+      )
+      this.emitStatus()
+      return
+    }
+
+    const args = ['-dedicated', '-port', String(opts.port), '-console']
+    if (opts.gslt) args.push('+sv_setsteamaccount', opts.gslt)
+    this.proc = spawn(exe, args, { cwd: dirname(exe) })
+
+    this.proc.on('error', (e: Error) => {
+      this.proc = null
+      this.emit('error', `Falha ao iniciar o servidor: ${e.message}`)
+      this.emitStatus()
     })
 
     const onData = (buf: Buffer) => this.ingest(buf.toString('utf8'))
-    this.proc.stdout.on('data', onData)
-    this.proc.stderr.on('data', onData)
+    this.proc.stdout?.on('data', onData)
+    this.proc.stderr?.on('data', onData)
     this.proc.on('exit', () => {
       this.proc = null
       this.players.clear()
@@ -39,6 +57,24 @@ export class ServerManager extends EventEmitter {
 
     this.emit('serverStart')
     this.emitStatus()
+  }
+
+  private resolveExe(opts: StartOptions): string | null {
+    const candidates: string[] = []
+    if (opts.serverExe && opts.serverExe.trim()) candidates.push(opts.serverExe.trim())
+    const base = opts.serverPath || ''
+    candidates.push(
+      join(base, 'cs2.exe'),
+      join(base, 'srcds.exe'),
+      join(base, 'game', 'bin', 'win64', 'cs2.exe'),
+      join(base, 'game', 'bin', 'win64', 'srcds.exe'),
+      join(base, 'cs2-dedicated', 'game', 'bin', 'win64', 'cs2.exe'),
+      join(base, 'cs2-dedicated', 'game', 'bin', 'win64', 'srcds.exe')
+    )
+    for (const c of candidates) {
+      if (c && existsSync(c)) return c
+    }
+    return null
   }
 
   stop(): void {

@@ -8,13 +8,14 @@ export default function Dashboard() {
   const [running, setRunning] = useState(false)
   const [players, setPlayers] = useState<Player[]>([])
   const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const offStatus = api.onServerStatus((s) => setRunning(s.running))
-    const off = api.onServerStatus(() => {})
+    const offError = api.onServerError((msg) => setError(msg))
     return () => {
       offStatus()
-      off()
+      offError()
     }
   }, [])
 
@@ -28,6 +29,7 @@ export default function Dashboard() {
 
   async function start() {
     setBusy(true)
+    setError(null)
     await api.startServer()
     await refresh()
     setBusy(false)
@@ -42,6 +44,11 @@ export default function Dashboard() {
 
   return (
     <>
+      {error && (
+        <div className="card" style={{ borderColor: 'var(--danger)', color: 'var(--danger)' }}>
+          <strong>{t('dashboard.error')}:</strong> {error}
+        </div>
+      )}
       <div className="card">
         <strong>{t('dashboard.status')}:</strong>{' '}
         <span style={{ color: running ? 'var(--ok)' : 'var(--danger)' }}>

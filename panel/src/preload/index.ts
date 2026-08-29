@@ -20,6 +20,11 @@ const api: FraghostAPI = {
     const listener = (_e: unknown, status: ServerStatus) => cb(status)
     ipcRenderer.on('server-status', listener)
     return () => ipcRenderer.removeListener('server-status', listener)
+  },
+  onServerError: (cb) => {
+    const listener = (_e: unknown, msg: string) => cb(msg)
+    ipcRenderer.on('server-error', listener)
+    return () => ipcRenderer.removeListener('server-error', listener)
   }
 }
 

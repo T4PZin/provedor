@@ -39,6 +39,14 @@ export default function SettingsPage() {
           onChange={(e) => update('serverPath', e.target.value)}
         />
 
+        <label className="label">{t('settings.serverExe')}</label>
+        <input
+          className="input"
+          value={form.serverExe ?? ''}
+          placeholder="cs2.exe (auto)"
+          onChange={(e) => update('serverExe', e.target.value)}
+        />
+
         <label className="label">{t('settings.port')}</label>
         <input
           className="input"

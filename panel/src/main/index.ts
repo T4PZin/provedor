@@ -37,7 +37,7 @@ function registerHandlers(): void {
   })
   ipcMain.handle('start-server', () => {
     const s = store.loadSettings()
-    server.start({ serverPath: s.serverPath, port: s.port, gslt: s.gslt })
+    server.start({ serverPath: s.serverPath, port: s.port, gslt: s.gslt, serverExe: s.serverExe })
     return true
   })
   ipcMain.handle('stop-server', () => {
@@ -70,6 +70,9 @@ function wireServerEvents(): void {
   })
   server.on('connect', (p: Player) => {
     store.rememberPlayers([p])
+  })
+  server.on('error', (msg: string) => {
+    win?.webContents.send('server-error', msg)
   })
 }
 
