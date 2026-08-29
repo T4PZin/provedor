@@ -18,7 +18,7 @@ export function parseLogLine(raw: string): LogEvent {
   if (!line) return { type: 'unknown', line }
 
   // Disconnect (avaliado antes de connect): "Name" disconnected (steamid:ID)
-  let m = line.match(/(?:"([^"]+)"|([^()]+?))\s+disconnected\s+\(steamid:(\d+)\)/i)
+  let m = line.match(/(?:"([^"]+)"|([^()]+?))\s+disconnected\s+\(steamid:([^\s)]+)\)/i)
   if (m) {
     const name = (m[1] ?? m[2] ?? '').trim()
     return { type: 'disconnect', steamId: m[3], name: name || undefined }
@@ -26,7 +26,7 @@ export function parseLogLine(raw: string): LogEvent {
 
   // Connect / entering game  ->  "Keyword: Name (steamid:ID) <>"
   m = line.match(
-    /(?:Connecting|connected|entering game)\s*:\s*(?:"([^"]+)"|([^()<]+?))\s*(?:<(\d+)>)?\s*\(steamid:(\d+)\)/i
+    /(?:Connecting|connected|entering game)\s*:\s*(?:"([^"]+)"|([^()<]+?))\s*(?:<(\d+)>)?\s*\(steamid:([^\s)]+)\)/i
   )
   if (m) {
     return {
@@ -38,7 +38,7 @@ export function parseLogLine(raw: string): LogEvent {
   }
 
   // Chat: Name (steamid:ID): message
-  m = line.match(/(?:"([^"]+)"|([^()]+?))\s*\(steamid:(\d+)\)\s*:\s*(.+)/i)
+  m = line.match(/(?:"([^"]+)"|([^()]+?))\s*\(steamid:([^\s)]+)\)\s*:\s*(.+)/i)
   if (m) {
     return {
       type: 'chat',
@@ -49,7 +49,7 @@ export function parseLogLine(raw: string): LogEvent {
   }
 
   // Status block: # 1 "Name" steamid:7656...
-  m = line.match(/^#\s*\d+\s+"(.*?)"\s+steamid:(\d+)/i)
+  m = line.match(/^#\s*\d+\s+"(.*?)"\s+steamid:([^\s)]+)/i)
   if (m) {
     return { type: 'status', players: [{ name: m[1].trim(), steamId: m[2] }] }
   }
