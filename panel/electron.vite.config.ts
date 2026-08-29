@@ -2,10 +2,27 @@ import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
-  renderer: {
-    plugins: [react()],
-    server: {
-      port: 5173
+  main: {
+    build: {
+      rollupOptions: {
+        input: 'src/main/index.ts'
+      }
     }
+  },
+  preload: {
+    build: {
+      rollupOptions: {
+        input: 'src/preload/index.ts'
+      }
+    }
+  },
+  renderer: {
+    root: 'src/renderer',
+    build: {
+      rollupOptions: {
+        input: 'src/renderer/index.html'
+      }
+    },
+    plugins: [react()]
   }
 })

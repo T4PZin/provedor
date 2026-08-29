@@ -1,6 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron'
-import type { FraghostAPI } from '../types'
-import type { ServerStatus } from '../types'
+import type { FraghostAPI, ServerStatus } from '../../types'
 
 const api: FraghostAPI = {
   loadSettings: () => ipcRenderer.invoke('load-settings'),
