@@ -37,6 +37,7 @@ export class ServerManager extends EventEmitter {
 
     const args = ['-dedicated', '-port', String(opts.port), '-console']
     if (opts.gslt) args.push('+sv_setsteamaccount', opts.gslt)
+    args.push('+map', 'de_dust2')
     this.proc = spawn(exe, args, { cwd: dirname(exe) })
 
     this.proc.on('error', (e: Error) => {
