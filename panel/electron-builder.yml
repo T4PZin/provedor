@@ -20,8 +20,9 @@ publish:
 win:
   target:
     - nsis
-  signingHashAlgorithms:
-    - sha256
+  signtoolOptions:
+    signingHashAlgorithms:
+      - sha256
   # azureSignTool:
   #   azureKeyVaultUrl: "https://<seu-cofre>.vault.azure.net"
   #   azureClientId: "<client-id>"

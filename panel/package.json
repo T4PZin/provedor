@@ -1,6 +1,6 @@
 {
   "name": "fraghost",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Painel para gerenciar servidor CS2 com inventarios e skins por jogador",
   "private": true,
   "author": "T4PZIN",
